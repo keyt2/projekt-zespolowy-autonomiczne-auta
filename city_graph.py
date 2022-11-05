@@ -9,8 +9,8 @@ city_name = "Iłża, Poland"
 graph = ox.graph_from_place(city_name, network_type='drive')
 ox.plot_graph(graph)
 nodes, edges = ox.graph_to_gdfs(graph)
-#print(edges['highway'].value_counts())
-#plt.show()
+#tu niżej jest wyznaczana najkrótsza droga między szpitalem a liceum i nanoszona na mapę, dużo tu jakichś dziwnych operacji, ale generalnie chodzi o to, żeby pobrać współrzędne
+#"środka" tych dwóch miejsc, wyznaczyć najbliższe do nich węzły na grafie i od nich dopiero wyznaczyć najkrótszą drogę
 placename = "Samodzielny Publiczny Zespół Zakładów Opieki Zdrowotnej - Szpital w Iłży"
 geocoded_place = ox.geocode_to_gdf(placename)
 geocoded_place = geocoded_place.to_crs(CRS(edges.crs))
