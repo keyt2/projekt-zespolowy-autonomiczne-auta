@@ -1,0 +1,30 @@
+class Car:
+    def __init__(self, car_id: int, capacity: int, x: float, y: float, battery_time: int):
+        #(x,y)-coordinates
+        self.car_id = car_id
+        self.capacity = capacity
+        self.x = x
+        self.y = y #czy zrobic oddzielną klase z lokalizacją x,y? albo tuple?
+        self.battery_time = battery_time
+
+    def show_statistics(self):
+        print(f"Car number: {self.car_id}, capacity: {self.capacity} people, coordinates: ({self.x},{self.y}),"
+              f" battery time left: {self.battery_time}")
+
+class User:
+    def __init__(self, user_id: int, name: str, surname: str, phone_number: int):
+        self.user_id = user_id
+        self.name = name
+        self.surname = surname
+        self.phone_number = phone_number
+
+class Travel:
+    def __init__(self, start_point_x: float, start_point_y: float, end_point_x: float,  end_point_y: float, time: int):
+        self.start_point_x = start_point_x
+        self.start_point_y = start_point_y
+        self.end_point_x = end_point_x
+        self.end_point_y = end_point_y
+        self.time = time
+
+car1 = Car(12345, 5, 22.35, 35.56, 66)
+car1.show_statistics()
