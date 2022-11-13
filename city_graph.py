@@ -4,13 +4,11 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from pyproj import CRS
 import contextily as ctx
+from car import Car
 
 city_name = "Iłża, Poland"
 graph = ox.graph_from_place(city_name, network_type='drive')
-ox.plot_graph(graph)
 nodes, edges = ox.graph_to_gdfs(graph)
-#tu niżej jest wyznaczana najkrótsza droga między szpitalem a liceum i nanoszona na mapę, dużo tu jakichś dziwnych operacji, ale generalnie chodzi o to, żeby pobrać współrzędne
-#"środka" tych dwóch miejsc, wyznaczyć najbliższe do nich węzły na grafie i od nich dopiero wyznaczyć najkrótszą drogę
 placename = "Samodzielny Publiczny Zespół Zakładów Opieki Zdrowotnej - Szpital w Iłży"
 geocoded_place = ox.geocode_to_gdf(placename)
 geocoded_place = geocoded_place.to_crs(CRS(edges.crs))
@@ -26,3 +24,15 @@ target_node = nodes.loc[target_node_id]
 od_nodes = gpd.GeoDataFrame([orig_node, target_node], geometry='geometry', crs=nodes.crs)
 route = nx.shortest_path(G=graph, source=orig_node_id, target=target_node_id, weight="length")
 ox.plot_graph_route(graph, route)
+
+# UWAGA! Tu niżej miał być niby pokazany najbliższy węzeł do Czachowskiego 36. Ale to
+# nie jest dobrze zrobione z pewnych względów. Na grafie pokazuje się złe miejsce.
+# Przynajmniej widać jakiś punkt.
+place = "Czachowskiego 36, Iłża"
+position = ox.geocode(place)
+nearest_node = ox.nearest_nodes(graph, position[0], position[1])
+car_1 = Car(1, 5, graph.nodes[nearest_node]['x'], graph.nodes[nearest_node]['y'], 100)
+car_1.show_statistics()
+fig, ax = ox.plot_graph(graph, show=False, close=False)
+ax.scatter(graph.nodes[nearest_node]['x'], graph.nodes[nearest_node]['y'], c='blue')
+plt.show()
