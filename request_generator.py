@@ -18,7 +18,5 @@ class RequestGenerator:
         return Request(source[0] + " " + source[1], destination[0] + " " + destination[1], random_time())
 
 
-
-
 rg = RequestGenerator()
 r = rg.generate_request().show()

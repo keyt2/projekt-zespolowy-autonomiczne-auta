@@ -1,10 +1,9 @@
+import matplotlib.pyplot as plt
+from pyproj import CRS
+from car import Car
 import geopandas as gpd
 import osmnx as ox
-import matplotlib.pyplot as plt
 import networkx as nx
-from pyproj import CRS
-import contextily as ctx
-from car import Car
 
 city_name = "Iłża, Poland"
 graph = ox.graph_from_place(city_name, network_type='drive')
@@ -31,7 +30,7 @@ ox.plot_graph_route(graph, route)
 place = "Czachowskiego 36, Iłża"
 position = ox.geocode(place)
 nearest_node = ox.nearest_nodes(graph, position[0], position[1])
-car_1 = Car(1, 5, graph.nodes[nearest_node]['x'], graph.nodes[nearest_node]['y'], 100)
+car_1 = Car(1, 5, graph.nodes[nearest_node]['x'], graph.nodes[nearest_node]['y'], 100, 0, 0, 0, graph)
 car_1.show_statistics()
 fig, ax = ox.plot_graph(graph, show=False, close=False)
 ax.scatter(graph.nodes[nearest_node]['x'], graph.nodes[nearest_node]['y'], c='blue')
