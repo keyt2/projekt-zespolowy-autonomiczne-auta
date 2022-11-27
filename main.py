@@ -31,10 +31,11 @@ def main():
     time_in_min = 0  # na razie zakładam, że każdy update w programie będzie oznaczał upływ 1 minuty w świecie realnym
     rg = RequestGenerator()
     r = rg.generate_request()
-    geocoded_place = ox.geocode_to_gdf(r.address_from + ", Iłża")
+    r.show()
+    geocoded_place = ox.geocode_to_gdf(r.address_from + ", Iłża", which_result=1)
     geocoded_place = geocoded_place.to_crs(CRS(edges.crs))
     origin = geocoded_place["geometry"].centroid.values[0]
-    geocoded_place = ox.geocode_to_gdf(r.address_to + ", Iłża")
+    geocoded_place = ox.geocode_to_gdf(r.address_to + ", Iłża", which_result=1)
     geocoded_place = geocoded_place.to_crs(CRS(edges.crs))
     destination = geocoded_place["geometry"].centroid.values[0]
     orig_node_id = ox.nearest_nodes(graph, origin.x, origin.y)
