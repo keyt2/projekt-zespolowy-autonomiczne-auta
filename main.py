@@ -9,6 +9,7 @@ from pyproj import CRS
 import pandas as pd
 from request_generator import RequestGenerator
 from request import Request
+from PyQt5 import uic, QtWidgets
 
 
 def main():
