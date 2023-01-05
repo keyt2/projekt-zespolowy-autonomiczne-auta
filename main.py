@@ -10,7 +10,9 @@ from pyproj import CRS
 import pandas as pd
 from request_generator import RequestGenerator
 from request import Request
-from PyQt5 import uic, QtWidgets"""to bedzie do GUI"""
+#from PyQt5 import uic, QtWidgets  '''to bedzie do GUI'''
+from Allocation_request import allocation_request
+
 
 
 #update wszystkich pozycji i statystyk samochodów naraz
@@ -37,6 +39,8 @@ def main():
         car_list.append(Car(i, 6, 20, graph))
     for i in range(19, 21):
         car_list.append(Car(i, 3, 20, graph))
+
+    tak = 0    #to tylko do testow
     while True:
         time.sleep(0.2)
         time_in_min += 1
@@ -67,7 +71,11 @@ def main():
             # jeżeli wpłynęła jakaś prośba, to przypisuję ją do losowego auta; ale to jest rozwiązanie tymczasowe!
             # oczywiście trzeba to pozmieniać, bo w tym momencie auto może porzucić swoją dotychczasową prośbę
             # i przeteleportować się do punktu wyjściowego nowej prośby, co jest oczywiście nierealne
-            random.choice(car_list).set_route(route)
+            #random.choice(car_list).set_route(route)
+            # dlugosc trasy w metrach o ile dobrze to zrobiłam
+            route_cost = nx.shortest_path_length(G=graph, source=orig_node_id, target=target_node_id, weight="length")
+            car_list, tak = allocation_request(car_list, route, route_cost, tak)
+
         # update_position() służy do tego, żeby autko przesunęło się do przypisanej do niego drodze;
         # show_statistics() pokazuje, gdzie się obecnie znajduje
         update_all(car_list)
