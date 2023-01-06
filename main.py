@@ -11,6 +11,10 @@ import pandas as pd
 from request_generator import RequestGenerator
 from request import Request
 from PyQt5 import uic, QtWidgets"""to bedzie do GUI"""
+import matplotlib # ogólny import biblioteki (możemy z niej potem korzystać)
+matplotlib.use('Qt5Agg') # definiujemy backend którego ma używać biblioteka. Wskazujemy, że używamy PyQt w wersji 5
+from matplotlib.figure import Figure # import obiektu "figury" której użyjemy do rysowania wykresów
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg # a tu widget z PyQt, który będzie wyświetlał się na ekranie
 
 
 #update wszystkich pozycji i statystyk samochodów naraz
