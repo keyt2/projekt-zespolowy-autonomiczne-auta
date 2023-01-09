@@ -10,7 +10,7 @@ from pyproj import CRS
 import pandas as pd
 from request_generator import RequestGenerator
 from request import Request
-#from PyQt5 import uic, QtWidgets  '''to bedzie do GUI'''
+from PyQt5 import uic, QtWidgets  '''to bedzie do GUI'''
 from Allocation_request import allocation_request
 
 
@@ -74,7 +74,8 @@ def main():
             #random.choice(car_list).set_route(route)
             # dlugosc trasy w metrach o ile dobrze to zrobiłam
             route_cost = nx.shortest_path_length(G=graph, source=orig_node_id, target=target_node_id, weight="length")
-            car_list, tak = allocation_request(car_list, route, route_cost, tak)
+            tak, chosen_car_id = allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, td)    # funkcja zwraca chosen_car w ktorym zapisuje indeks wybranego samochodu
+            car_list[chosen_car_id].add_route(route)
 
         # update_position() służy do tego, żeby autko przesunęło się do przypisanej do niego drodze;
         # show_statistics() pokazuje, gdzie się obecnie znajduje
