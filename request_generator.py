@@ -104,7 +104,7 @@ class RequestGenerator:
             elif datetime.strptime("18:00:00", "%H:%M:%S") < time < datetime.strptime(
                         "21:00:00", "%H:%M:%S"):
                 print("evening")
-                # jest 10% szansy, że w każdej minucie rano wpłynie jakaś prośba
+                # jest 10% szansy, że w każdej minucie wieczorem wpłynie jakaś prośba
                 if i in range(101, 1001):
                     return Request("_" + " " + "_", "_" + " " + "_", time, 0)
                 # z tego ok. 30% szansy, że prośba będzie z residential do city_centre
