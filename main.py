@@ -3,7 +3,6 @@ import time
 from datetime import datetime, timedelta
 
 from car import Car
-#from cars import Cars
 import geopandas as gpd
 import osmnx as ox
 import networkx as nx
@@ -11,17 +10,36 @@ from pyproj import CRS
 import pandas as pd
 from request_generator import RequestGenerator
 from request import Request
-from PyQt5 import uic, QtWidgets  '''to bedzie do GUI'''
+from osmnx import utils_geo
+#from PyQt5 import uic, QtWidgets  """to bedzie do GUI"""
 from Allocation_request import allocation_request
 
 from osmnx import utils_geo
 #from PyQt5 import uic, QtWidgets  """to bedzie do GUI"""
 
+#obsługa nieprzydzielonych wcześniej próśb
+def handling_unallocated_request(car_list, graph, tak, tm, unallocated_requests):
+    # wywołuje funkcje przydzielania prośby
+    tak, chosen_car_id = allocation_request(car_list, unallocated_requests[1][0], unallocated_requests[1][1],
+                                            graph, unallocated_requests[1][2], tak, tm, unallocated_requests[1][3])
+    if chosen_car_id == 99:
+        pass
+    else:
+        car_list[chosen_car_id].add_route(unallocated_requests[1][0],
+                                          unallocated_requests[1][3])  # usuwa spełnioną prośbę z unallocates_request
+        del unallocated_requests[1]  # i zamienia klucze w słowniku, aby po usunięciu pierwszego z listy reszta
+        new_dict = {}  # "przesunęła" się o 1 do przodu.
+        for key, value in unallocated_requests.items():
+            new_key = key - 1
+            new_dict[new_key] = value
+            unallocated_requests = new_dict
 
 #update wszystkich pozycji i statystyk samochodów naraz
 def update_all(car_list):
-    for i in range(0, 21):
+    for i in range(0, 5):
+        # update_position() służy do tego, żeby autko przesunęło się do przypisanej do niego drodze;
         car_list[i].update_position()
+        # show_statistics() pokazuje, gdzie się obecnie znajduje
         car_list[i].show_statistics()
 
 def main():
@@ -34,6 +52,7 @@ def main():
     car_list = []
     for i in range(0, 5):
         car_list.append(Car(i, 5, 20, graph))
+        '''
     for i in range(5, 10):
         car_list.append(Car(i, 5, 25, graph))
     for i in range(10, 15):
@@ -42,8 +61,9 @@ def main():
         car_list.append(Car(i, 6, 20, graph))
     for i in range(19, 21):
         car_list.append(Car(i, 3, 20, graph))
-
-    tak = 0    #to tylko do testow
+        '''
+    tak = 0    #zapewnia przydzielenie na początku programu wszystkim autom po jednej prośbie.
+    unallocated_requests = dict()      # słownik nieprzydzielonych próśb
     while True:
         update_all(car_list)
         time.sleep(0.2)
@@ -51,8 +71,10 @@ def main():
         print('Time:', tm)
         r = rg.generate_request(tm) # pobieram prośbę z generatora próśb
         r.show() # pokazuję, jaka prośba (skąd jedziemy i dokąd) została wygenerowana)
-        # jeśli została wygenerowana pusta prośba, przechodzę do kolejnego obrotu pętli
+        # jeśli została wygenerowana pusta prośba, przechodzę do kolejnego obrotu pętli, ale najpierw obsługuje jedną prośbę z unalloccated_request
         if (r.address_from == "_ _"):
+            if len(unallocated_requests) != 0:
+                handling_unallocated_request(car_list, graph, tak, tm, unallocated_requests)
             continue
         # poniższe trzy linijki: robię jakieś przekształcenia, których sama do końca nie rozumiem, jeżeli chcecie znać szczegóły,
         # to przeanalizujcie ten kurs, który wam wysłałam na GitHubie; generalnie biorę punkt wyjściowy (origin),
@@ -72,17 +94,14 @@ def main():
         # wyznaczam i wyświetlam najkrótszą drogę od węzła wyjściowego do docelowego
         route = nx.shortest_path(G=graph, source=orig_node_id, target=target_node_id, weight="length")
         ox.plot_graph_route(graph, route)  # pokazuje graf(?)
-        # jeżeli wpłynęła jakaś prośba, to przypisuję ją do losowego auta; ale to jest rozwiązanie tymczasowe!
-        # oczywiście trzeba to pozmieniać, bo w tym momencie auto może porzucić swoją dotychczasową prośbę
-        # i przeteleportować się do punktu wyjściowego nowej prośby, co jest oczywiście nierealne
-        random.choice(car_list).set_route(route)
-        # dlugosc trasy w metrach o ile dobrze to zrobiłam
+        # dlugosc trasy w metrach
         route_cost = nx.shortest_path_length(G=graph, source=orig_node_id, target=target_node_id, weight="length")
-        tak, chosen_car_id = allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, td)  # funkcja zwraca chosen_car w ktorym zapisuje indeks wybranego samochodu
-        car_list[chosen_car_id].add_route(route)
-
-        # update_position() służy do tego, żeby autko przesunęło się do przypisanej do niego drodze;
-        # show_statistics() pokazuje, gdzie się obecnie znajduje
-
+        tak, chosen_car_id = allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm, r.passangers)  # funkcja zwraca chosen_car_id czyli indeks wybranego samochodu
+        if chosen_car_id == 99:
+            print("Nie przydzielono prośby")
+            print("Dodano tą prośbę do oddzielnej listy")
+            unallocated_requests[len(unallocated_requests) + 1] = (route, route_cost, orig_node_id, r.passangers)     # dodałam to co będzie po kolei potrzebnę do przekazania funkcji allocation_request()
+        else:
+            car_list[chosen_car_id].add_route(route, r.passangers)
 
 main()
