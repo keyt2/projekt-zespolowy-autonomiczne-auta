@@ -36,7 +36,7 @@ def handling_unallocated_request(car_list, graph, tak, tm, unallocated_requests)
 
 #update wszystkich pozycji i statystyk samochodów naraz
 def update_all(car_list):
-    for i in range(0, 5):
+    for i in range(0, 21):
         # update_position() służy do tego, żeby autko przesunęło się do przypisanej do niego drodze;
         car_list[i].update_position()
         # show_statistics() pokazuje, gdzie się obecnie znajduje
@@ -52,7 +52,6 @@ def main():
     car_list = []
     for i in range(0, 5):
         car_list.append(Car(i, 5, 20, graph))
-        '''
     for i in range(5, 10):
         car_list.append(Car(i, 5, 25, graph))
     for i in range(10, 15):
@@ -61,7 +60,6 @@ def main():
         car_list.append(Car(i, 6, 20, graph))
     for i in range(19, 21):
         car_list.append(Car(i, 3, 20, graph))
-        '''
     tak = 0    #zapewnia przydzielenie na początku programu wszystkim autom po jednej prośbie.
     unallocated_requests = dict()      # słownik nieprzydzielonych próśb
     while True:
@@ -96,11 +94,12 @@ def main():
         ox.plot_graph_route(graph, route)  # pokazuje graf(?)
         # dlugosc trasy w metrach
         route_cost = nx.shortest_path_length(G=graph, source=orig_node_id, target=target_node_id, weight="length")
-        tak, chosen_car_id = allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm, r.passangers)  # funkcja zwraca chosen_car_id czyli indeks wybranego samochodu
+        # funkcja zwraca chosen_car_id czyli indeks wybranego samochodu
+        tak, chosen_car_id = allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm, r.passangers)
         if chosen_car_id == 99:
             print("Nie przydzielono prośby")
             print("Dodano tą prośbę do oddzielnej listy")
-            unallocated_requests[len(unallocated_requests) + 1] = (route, route_cost, orig_node_id, r.passangers)     # dodałam to co będzie po kolei potrzebnę do przekazania funkcji allocation_request()
+            unallocated_requests[len(unallocated_requests) + 1] = (route, route_cost, orig_node_id, r.passangers)
         else:
             car_list[chosen_car_id].add_route(route, r.passangers)
 

@@ -18,8 +18,7 @@ class Car:
         # ta lista węzłów jest zapisana w route, a current_street przechowuje aktualną krawędź,
         # na której jest auto
         self.current_street = " "
-        #nearest_node: Ten który został minięty jako ostatni, coś z nim jest nie tak,
-        # bo czasami nie ma parametru 'geometry', którego używam i wywala błąd
+        # nearest_node: Ten który został minięty jako ostatni
         self.nearest_node = ""
         self.passengers_on_route = 0        # przechowuje ile pasażerów jest w sumie we wszystkich prośbach przypisanych do auta
         self.passengers_on_current_request = 0   # przechowuje ile pasażerów zamówiło aktualnie obsługiwaną prośbę
@@ -56,7 +55,7 @@ class Car:
         # jeżeli auto ma akurat przypisaną jakąś prośbę, to jego statystyki wyglądają tak...
         if (len(self.route) != 0):
             print(f"Car number: {self.car_id}, capacity: {self.capacity} people,"
-              f" battery time left: {self.battery_time}, " #current street: {self.current_street[0]['name']}, "      #zablokowałam bo mi wywalało błędy i nie dało się testować
+              f" battery time left: {self.battery_time}, current street: {self.current_street[0]['name']}, "
               f" street length travelled: {self.street_length_travelled}, "
               f"street length: {self.current_street[0]['length']}")
             # ... a tak jeśli nie ma przypisanej żadnej prośby
