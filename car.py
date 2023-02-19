@@ -54,8 +54,8 @@ class Car:
     def show_statistics(self):
         # jeżeli auto ma akurat przypisaną jakąś prośbę, to jego statystyki wyglądają tak...
         if (len(self.route) != 0):
-            print(f"CZY TU JEST BLAD? Car number: {self.car_id}, capacity: {self.capacity} people,"
-              #f" battery time left: {self.battery_time}, current street: {self.current_street[0]['name']}, "#WYłAPANY BLAD-POPRAWIC "keyerror:'name'
+            print(f"Car number: {self.car_id}, capacity: {self.capacity} people,"
+              f" battery time left: {self.battery_time}, " #current street: {self.current_street[0]['name']}, "
               f" street length travelled: {self.street_length_travelled}, "
               f"street length: {self.current_street[0]['length']}")
             # ... a tak jeśli nie ma przypisanej żadnej prośby
@@ -66,7 +66,7 @@ class Car:
                   f"street length: _")
 
 
-# na razie przy każdym updacie autko przejeżdża sobie 10 metrów i rozładowuje się o 0,01 czegoś
+# na razie przy każdym updacie autko przejeżdża sobie 10 metrów i rozładowuje się o 0,01
 # (dostępny czas jeżdżenia zmniejsza się o minutę)
     def update_position(self):
         # jeśli numer węzła, który aktualnie przekroczyło autko jest większy od liczby węzłów zapisanych w route,

@@ -11,11 +11,7 @@ import pandas as pd
 from request_generator import RequestGenerator
 from request import Request
 from osmnx import utils_geo
-#from PyQt5 import uic, QtWidgets  """to bedzie do GUI"""
 from Allocation_request import allocation_request
-
-from osmnx import utils_geo
-#from PyQt5 import uic, QtWidgets  """to bedzie do GUI"""
 
 #obsługa nieprzydzielonych wcześniej próśb
 def handling_unallocated_request(car_list, graph, tak, tm, unallocated_requests):
@@ -73,12 +69,9 @@ def main():
         if (r.address_from == "_ _"):
             if len(unallocated_requests) != 0:
                 handling_unallocated_request(car_list, graph, tak, tm, unallocated_requests)
-            continue
-        # poniższe trzy linijki: robię jakieś przekształcenia, których sama do końca nie rozumiem, jeżeli chcecie znać szczegóły,
-        # to przeanalizujcie ten kurs, który wam wysłałam na GitHubie; generalnie biorę punkt wyjściowy (origin),
-        # jakoś go przekształcam do odpowiedniego systemu koordynatów (crs to jest coordinate reference system),
+            continue 
+        # biorę punkt wyjściowy (origin), przekształcam do odpowiedniego systemu koordynatów (crs to jest coordinate reference system),
         # i to centroid values bierze środek tego budynku, z którego adresu startujemy;
-        # jeżeli chcecie szczegółów, to musicie poczytać dokumentację
         geocoded_place = ox.geocode_to_gdf(r.address_from + ", Iłża", which_result=1)
         geocoded_place = geocoded_place.to_crs(CRS(edges.crs))
         origin = geocoded_place["geometry"].centroid.values[0]
