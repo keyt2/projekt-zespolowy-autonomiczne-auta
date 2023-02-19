@@ -63,8 +63,6 @@ def main():
     tak = 0    #zapewnia przydzielenie na początku programu wszystkim autom po jednej prośbie.
     unallocated_requests = dict()      # słownik nieprzydzielonych próśb
     while True:
-        print("CZYSZCZENIE")###################nie działa
-        os.system("clear")##############poprawić
         update_all(car_list)
         time.sleep(0.2)
         tm += timedelta(minutes=1)
