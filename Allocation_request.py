@@ -17,10 +17,8 @@ def remove_car_with_to_low_battery(battery_cost, fleet, removed_cars):
             pass
         elif fleet[i].battery_time > battery_cost:
             pass
-            # print(f'dojedzie    {fleet[i].car_id}')  # <- do testów później zniknie
         else:
             removed_cars.append(fleet[i])
-            # print(f'za mało baterii    {fleet[i].car_id}')  # <- do testów później zniknie
             fleet[i] = "no"
 
 def create_dict_distance_from_starting(car_dict, fleet, graph, orig_node_id):
@@ -33,13 +31,11 @@ def create_dict_distance_from_starting(car_dict, fleet, graph, orig_node_id):
                                                fleet[i].nearest_node['geometry'].centroid.y)
             to_start_length = nx.shortest_path_length(G=graph, source=nearest_node_id, target=orig_node_id,
                                                       weight="length")
-            print(to_start_length)
             car_dict[fleet[i].car_id] = to_start_length
 
 def sort_dict(car_dict):
     sorted_dict = sorted(car_dict.items(), key=lambda x: x[1])
     sorted_dict = dict(sorted_dict)
-    print(f'posortowane id:  {sorted_dict}')
     return sorted_dict
 
 def create_dict_final_time(car_dict_real_time, car_dict_time, tm):
@@ -94,7 +90,6 @@ def create_dict_sum_route(car_dict, fleet, graph, orig_node_id):
                 # dodaje jeszcze odległość ostatniego węzła w route od punktu początkowego w prośbie
                 sum_distance = sum_distance + nx.shortest_path_length(G=graph, source=fleet[i].route[j - 1][0][
                     len(fleet[i].route[j - 1][0]) - 1], target=orig_node_id, weight="length")
-                print(f'suma trasy jednego auta: {sum_distance}')
                 car_dict[fleet[i].car_id] = sum_distance
 
 def check_cars(fleet, good_car):
@@ -109,12 +104,9 @@ def remove_car_with_too_low_capacity(fleet, passengers, removed_cars):
     for i in range(len(fleet)):
         if fleet[i].passengers_on_route + passengers <= fleet[i].capacity:
             pass
-            # print(f'auto ma wystarczająco dużo miejsca    {fleet[i].car_id}')  # <- do testów później zniknie
         else:
             removed_cars.append(fleet[i])
-            # print(f'auto nie ma wystarczająco miejsca    {fleet[i].car_id}')  # <- do testów później zniknie
             fleet[i] = "no"
-            # del fleet[i]
 
 # W przypadku kiedy żadne auto nie jest w stanie przyjąć prośby funkcja zwraca car_id równe 99.
 def allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm, passengers):
@@ -144,7 +136,6 @@ def allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm
     # w idealnym przypadku mam coś na tej liście więc wybieram pierwszego, który jest najbliżej
     if len(sorted_dict) != 0:
         chosen_car_id = list(sorted_dict.keys())[0]
-        # print(f'auto, które dostało prośbę {chosen_car_id}')
         return tak, chosen_car_id
     else:                                             #to znaczy że wszystkie auta miały jakąś prośbe
         fleet = copy.copy(removed_cars)
@@ -156,7 +147,6 @@ def allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm
     good_car = "No"
     good_car = check_cars(fleet, good_car)
     if good_car == "No":
-        # print("Żadne auto nie ma wystarczającej ilości miejsca do zabrania wszystkich pasażerów")
         chosen_car_id = 99
         return tak, chosen_car_id
 
@@ -187,10 +177,8 @@ def allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm
     # w idealnym przypadku mam coś na tej liście więc wybieram pierwszego, który jest najbliżej
     if len(sorted_dict) != 0:
         chosen_car_id = list(sorted_dict.keys())[0]
-        # print(f'auto ktore dostało prośbe {chosen_car_id}')
         return tak, chosen_car_id
 
     else:                                        #to znaczy że wszystkie auta nie mają baterii żeby dojechać do celu
         chosen_car_id = 99
-        # print("żadne auto nie ma wystarczająco dużo baterii aby przejechać daną trasę")
         return tak, chosen_car_id

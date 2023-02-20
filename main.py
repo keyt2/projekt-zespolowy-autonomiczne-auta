@@ -21,6 +21,7 @@ def handling_unallocated_request(car_list, graph, tak, tm, unallocated_requests)
     if chosen_car_id == 99:
         pass
     else:
+        print(f"car with request: {chosen_car_id}")
         car_list[chosen_car_id].add_route(unallocated_requests[1][0],
                                           unallocated_requests[1][3])  # usuwa spełnioną prośbę z unallocates_request
         del unallocated_requests[1]  # i zamienia klucze w słowniku, aby po usunięciu pierwszego z listy reszta
@@ -90,11 +91,12 @@ def main():
         # funkcja zwraca chosen_car_id czyli indeks wybranego samochodu
         tak, chosen_car_id = allocation_request(car_list, route, route_cost, graph, orig_node_id, tak, tm, r.passangers)
         if chosen_car_id == 99:
-            print("Nie przydzielono prośby")
-            print("Dodano tą prośbę do oddzielnej listy")
+            print("Request is not assigned")
+            print("Request added to separate list")
             unallocated_requests[len(unallocated_requests) + 1] = (route, route_cost, orig_node_id, r.passangers)
         else:
             car_list[chosen_car_id].add_route(route, r.passangers)
+            print(f"car with request: {chosen_car_id}")
 
 
 main()
