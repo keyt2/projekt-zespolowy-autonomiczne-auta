@@ -21,8 +21,6 @@ class RequestGenerator:
         time5 = datetime.strptime("2023-02-01 21:00:00", "%Y-%m-%d %H:%M:%S")
         time6 = datetime.strptime("2023-02-01 23:59:59", "%Y-%m-%d %H:%M:%S")
         i = random.randint(1, 1000)
-        print("GODZINA:")
-        print(time)
         while True:
             if time < time6:
                 if time1 <= time < time2:
