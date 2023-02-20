@@ -54,10 +54,16 @@ class Car:
     def show_statistics(self):
         # jeżeli auto ma akurat przypisaną jakąś prośbę, to jego statystyki wyglądają tak...
         if (len(self.route) != 0):
-            print(f"Car number: {self.car_id}, capacity: {self.capacity} people,"
-              f" battery time left: {self.battery_time}, " #current street: {self.current_street[0]['name']}, "
-              f" street length travelled: {self.street_length_travelled}, "
-              f"street length: {self.current_street[0]['length']}")
+            if self.current_street[0].get('name') is None:
+                print(f"Car number: {self.car_id}, capacity: {self.capacity} people,"
+                  f" battery time left: {self.battery_time}, current street: UNKNOWN, "
+                  f" street length travelled: {self.street_length_travelled}, "
+                  f"street length: {self.current_street[0]['length']}")
+            else:
+                print(f"Car number: {self.car_id}, capacity: {self.capacity} people,"
+                      f" battery time left: {self.battery_time}, current street: {self.current_street[0]['name']}, "
+                      f" street length travelled: {self.street_length_travelled}, "
+                      f"street length: {self.current_street[0]['length']}")
             # ... a tak jeśli nie ma przypisanej żadnej prośby
         else:
             print(f"Car number: {self.car_id}, capacity: {self.capacity} people,"
@@ -88,7 +94,6 @@ class Car:
             self.battery_time -= 0.01
             self.current_node += 1
             self.street_length_travelled = self.street_length_travelled - self.current_street[0]['length']
-            print(f'current node: {self.current_node}, number of nodes: {len(self.route[1][0])}')
             if self.current_node >= len(self.route[1][0]) - 1:
                 if self.route.get(2) is not None:
                     self.passengers_on_route -= self.passengers_on_current_request  # jeśli został przekroczony ostatni węzeł to sprawdzam czy jest jakaś kolejna prośba w route
